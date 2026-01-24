@@ -24,7 +24,7 @@ public float rotationspeed;
          transform.Rotate(0, rotation*rotationspeed*Time.deltaTime, 0);
          mouvementx = (float) Math.Sin(Math.PI/180*transform.rotation.eulerAngles.y);
          mouvementz = (float) Math.Cos(Math.PI/180*transform.rotation.eulerAngles.y);
-    constantForce.relativeForce = new Vector3(0, movespeed*Time.deltaTime,0);
+    constantForce.relativeForce = new Vector3(0, 0,movespeed*Time.deltaTime);
     
       //  trplayer.position = new Vector3(trplayer.position.x+(mouvementx*movespeed*Time.deltaTime), trplayer.position.y, trplayer.position.z+(mouvementz*movespeed*Time.deltaTime));
     }
