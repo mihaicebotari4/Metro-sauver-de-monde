@@ -20,6 +20,11 @@ public float rotationspeed;
     // Update is called once per frame
     void Update()
     {
+      if (Input.GetKeyDown(KeyCode.Space))
+    {
+     
+      constantForce.relativeForce = new Vector3(0, 5,0);
+    }
          rotation = Input.GetAxis("Horizontal");
          transform.Rotate(0, rotation*rotationspeed*Time.deltaTime, 0);
          mouvementx = (float) Math.Sin(Math.PI/180*transform.rotation.eulerAngles.y);

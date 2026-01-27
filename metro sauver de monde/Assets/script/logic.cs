@@ -9,7 +9,7 @@ public class logic : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Instantiate(obstacle[0],new Vector3(0,0,0), new quaternion(0,0,0,0));
+        Instantiate(obstacle[0],new Vector3(0,1.6f,0), new quaternion(0,0,0,0));
     }
 
     // Update is called once per frame
