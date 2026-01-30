@@ -6,30 +6,32 @@ public class player : MonoBehaviour
 {public float movespeed;
 public float rotation;
 public float rotationspeed;
+private float timer;
 
    private Transform trplayer;
    private float mouvementx =0;
    private float mouvementz = 0;
-   private ConstantForce constantForce;
+   private ConstantForce constantForce2;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {constantForce = GetComponent<ConstantForce>();
+    {constantForce2 = GetComponent<ConstantForce>();
         trplayer = GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
+      timer += Time.deltaTime;
       if (Input.GetKeyDown(KeyCode.Space))
     {
      
-      constantForce.relativeForce = new Vector3(0, 5,0);
+      constantForce2.relativeForce = new Vector3(0, 5,0);
     }
          rotation = Input.GetAxis("Horizontal");
          transform.Rotate(0, rotation*rotationspeed*Time.deltaTime, 0);
          mouvementx = (float) Math.Sin(Math.PI/180*transform.rotation.eulerAngles.y);
          mouvementz = (float) Math.Cos(Math.PI/180*transform.rotation.eulerAngles.y);
-    constantForce.relativeForce = new Vector3(0, 0,movespeed*Time.deltaTime);
+    constantForce2.relativeForce = new Vector3(0, 0,(float)movespeed*Time.deltaTime);
     
       //  trplayer.position = new Vector3(trplayer.position.x+(mouvementx*movespeed*Time.deltaTime), trplayer.position.y, trplayer.position.z+(mouvementz*movespeed*Time.deltaTime));
     }
