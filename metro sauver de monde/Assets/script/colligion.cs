@@ -9,7 +9,7 @@ public class colligion : MonoBehaviour
     private float timer;
     private int used=0;
     public float minVelocity = 5f; 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+   
     void Start()
     {
         rbo = GetComponent<Rigidbody>();
@@ -36,5 +36,6 @@ public class colligion : MonoBehaviour
 
         rbo.AddForce(dir * 15f, ForceMode.Impulse);
         used =1;
+        staticlogic.enemycount --;
     }
 }
