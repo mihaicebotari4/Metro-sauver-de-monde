@@ -19,11 +19,11 @@ public class shrink : MonoBehaviour
         {
             if (enemey.transform.localScale.x < 1)
             { 
-                enemey.transform.localScale = Vector3.MoveTowards(   enemey.transform.localScale ,john,Time.deltaTime*15);  
+                enemey.transform.localScale = Vector3.MoveTowards(   enemey.transform.lossyScale ,john,Time.deltaTime*15);  
                           }
             else
             {john = new Vector3(1,1,1);
-                 enemey.transform.localScale = Vector3.MoveTowards(   enemey.transform.localScale ,john,Time.deltaTime*15);  
+                 enemey.transform.localScale = Vector3.MoveTowards(   enemey.transform.lossyScale ,john,Time.deltaTime*15);  
             }
         }
  

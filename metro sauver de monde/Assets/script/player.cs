@@ -31,8 +31,9 @@ private float timer;
          transform.Rotate(0, rotation*rotationspeed*Time.deltaTime, 0);
          mouvementx = (float) Math.Sin(Math.PI/180*transform.rotation.eulerAngles.y);
          mouvementz = (float) Math.Cos(Math.PI/180*transform.rotation.eulerAngles.y);
-    constantForce2.relativeForce = new Vector3(0, 0,(float)movespeed*Time.deltaTime);
+       //  constantForce2.relativeForce = new Vector3(0, 0,(float)movespeed*Time.deltaTime);
     
-      //  trplayer.position = new Vector3(trplayer.position.x+(mouvementx*movespeed*Time.deltaTime), trplayer.position.y, trplayer.position.z+(mouvementz*movespeed*Time.deltaTime));
+        trplayer.position = new Vector3(trplayer.position.x+(mouvementx*2.5f*Time.deltaTime), trplayer.position.y, trplayer.position.z+(mouvementz*2.5f*Time.deltaTime));
+   //Debug.Log(constantForce2.relativeForce.z);
     }
 }

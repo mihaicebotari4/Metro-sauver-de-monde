@@ -8,7 +8,7 @@ public class colligion : MonoBehaviour
     
     private float timer;
     private int used=0;
-    public float minVelocity = 5f; 
+   static public float minVelocity = 5f; 
    
     void Start()
     {
@@ -18,7 +18,10 @@ public class colligion : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {if (used ==1)
+    {minVelocity = 4.8f + (logic.level/6f);
+        text.difficulty = minVelocity;
+
+        if (used ==1)
         timer += Time.deltaTime;
         if (timer >=2f)
         Destroy(gameObject);
@@ -29,8 +32,10 @@ public class colligion : MonoBehaviour
         if(!other.CompareTag("colligion box")) return;
         Rigidbody rb = other.attachedRigidbody;
 
-        if(rb != null && rb.linearVelocity.magnitude <= minVelocity) return;
-
+        if(rb != null && rb.linearVelocity.magnitude <= minVelocity)
+        { text.damage();
+            return;
+        }
         Vector3 dir = (transform.position-other.transform.position ).normalized;
         dir.y = 1f;
 
