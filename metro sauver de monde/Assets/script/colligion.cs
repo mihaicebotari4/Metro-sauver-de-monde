@@ -39,7 +39,7 @@ public class colligion : MonoBehaviour
         Vector3 dir = (transform.position-other.transform.position ).normalized;
         dir.y = 1f;
 
-        rbo.AddForce(dir * 15f, ForceMode.Impulse);
+        rbo.AddForce(dir * 45f, ForceMode.Impulse);
         used =1;
         staticlogic.enemycount --;
     }

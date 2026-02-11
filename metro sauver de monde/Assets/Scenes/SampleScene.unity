@@ -338,7 +338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8819598151755940196, guid: 2f18c16833f8b88499b000f318ecfb0a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 8819598151755940196, guid: 2f18c16833f8b88499b000f318ecfb0a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -346,7 +346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8819598151755940196, guid: 2f18c16833f8b88499b000f318ecfb0a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 3.05
       objectReference: {fileID: 0}
     - target: {fileID: 8819598151755940196, guid: 2f18c16833f8b88499b000f318ecfb0a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1111,8 +1111,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.24, y: 2.02, z: 2}
-  m_Center: {x: 0, y: 0, z: 4.1}
+  m_Size: {x: 0.89, y: 1.93, z: 1.05}
+  m_Center: {x: 0.14, y: 0, z: 12.28}
 --- !u!23 &947284584
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1416,7 +1416,7 @@ GameObject:
   - component: {fileID: 1477023844}
   - component: {fileID: 1477023845}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: bus
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1430,9 +1430,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1477023836}
   serializedVersion: 5
-  m_Mass: 0.85
-  m_LinearDamping: 0.35
-  m_AngularDamping: 5
+  m_Mass: 0.8
+  m_LinearDamping: 2.27
+  m_AngularDamping: 2.01
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1515,7 +1515,7 @@ Transform:
   m_GameObject: {fileID: 1477023836}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.9991554, z: 0, w: -0.04109095}
-  m_LocalPosition: {x: 1.89, y: 2.5, z: 0.69}
+  m_LocalPosition: {x: 1.89, y: 2.5, z: 0.54}
   m_LocalScale: {x: 1.55, y: 1.55, z: 1.55}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1536,9 +1536,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf53589580fa9a24ba77d67327027310, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  movespeed: 1000
+  movespeed: 17
   rotation: 0
-  rotationspeed: 80
+  rotationspeed: 12
+  rb: {fileID: 0}
 --- !u!75 &1477023843
 ConstantForce:
   m_ObjectHideFlags: 0
@@ -1573,7 +1574,7 @@ CapsuleCollider:
   m_Radius: 0.98
   m_Height: 5.8
   m_Direction: 2
-  m_Center: {x: 0.01, y: 0.4, z: -1.06}
+  m_Center: {x: 0.01, y: 0.4, z: 1.97}
 --- !u!135 &1477023845
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1594,7 +1595,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
-  m_Center: {x: 0, y: -0.23, z: 0}
+  m_Center: {x: 0, y: -0.23, z: 1.91}
 --- !u!1 &1586906498
 GameObject:
   m_ObjectHideFlags: 0
