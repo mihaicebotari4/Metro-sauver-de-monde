@@ -31,18 +31,18 @@ public class player : MonoBehaviour
     constantForce2.relativeForce = new Vector3(0, 5,0);
   }
         rotation = Input.GetAxis("Horizontal");
-        Quaternion turn = Quaternion.Euler(0f, rotation * rotationspeed  * Time.fixedDeltaTime, 0f);
-        rb.MoveRotation(rb.rotation * turn);
+       // Quaternion turn = Quaternion.Euler(0f, rotation * rotationspeed  * Time.fixedDeltaTime, 0f);
+       // rb.MoveRotation(rb.rotation * turn);
 
        //Vector3 move = transform.forward  * movespeed * Time.fixedDeltaTime;
       //  rb.MovePosition(rb.position + move);
-       // rb.AddTorque(0, rotation*rotationspeed*Time.deltaTime, 0);
+        rb.AddTorque(0, rotation*rotationspeed*Time.deltaTime, 0);
       // transform.Rotate(0, rotation*rotationspeed*Time.deltaTime, 0);
         mouvementx = (float) Math.Sin(Math.PI/180*transform.rotation.eulerAngles.y);
         mouvementz = (float) Math.Cos(Math.PI/180*transform.rotation.eulerAngles.y);
-     rb.AddRelativeForce(new Vector3(0, 0,movespeed*Time.deltaTime),ForceMode.Impulse);
+     rb.AddRelativeForce(new Vector3(0, 0,movespeed*Time.deltaTime),ForceMode.Force);
   
-     //trplayer.position = new Vector3(trplayer.position.x+(mouvementx*2.5f*Time.deltaTime), trplayer.position.y, trplayer.position.z+(mouvementz*2.5f*Time.deltaTime));
+     trplayer.position = new Vector3(trplayer.position.x+(mouvementx*2.5f*Time.deltaTime), trplayer.position.y, trplayer.position.z+(mouvementz*2.5f*Time.deltaTime));
   //Debug.Log(constantForce2.relativeForce.z);
   }
   

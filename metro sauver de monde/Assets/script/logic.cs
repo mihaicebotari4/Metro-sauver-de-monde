@@ -53,11 +53,29 @@ public static float lvltimer;
            staticlogic.enemycount = mobspawed;
 
            for (int i=0;i<mobspawed;i++)
-            {
-                Instantiate(obstacle[0],new Vector3(UnityEngine.Random.Range(-10,10),1f,UnityEngine.Random.Range(-15,15)), new quaternion(0,0,0,0));
-               
+            {// checks for a free space
+                Vector3 spawnPos= new Vector3(0,0,0);
+                bool spaceOccupied = true;
+                int maxAttempts = 10;
+                int attempts = 0;
+
                 
-                
+                while (spaceOccupied && attempts < maxAttempts)
+                {
+                    spawnPos = new Vector3(UnityEngine.Random.Range(-10, 10), 4f, UnityEngine.Random.Range(-15, 15));
+                    
+                  
+                    Collider[] colliders = Physics.OverlapSphere(spawnPos, 1f);
+                    spaceOccupied = colliders.Length > 0;
+                    
+                    attempts++;
+                }
+
+              
+                if (!spaceOccupied)
+                {
+                    Instantiate(obstacle[0], spawnPos, new quaternion(0, 0, 0, 0));
+                }
             
             }
            
