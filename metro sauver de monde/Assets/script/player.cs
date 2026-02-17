@@ -7,12 +7,15 @@ public class player : MonoBehaviour
   public float movespeed;
   public float rotation;
   public float rotationspeed;
+  public float boostMultiplier = 0f;
+  public bool driftEnabled = false;
   private float timer;
   [SerializeField] private Rigidbody rb;
 
   private Transform trplayer;
   private float mouvementx =0;
   private float mouvementz = 0;
+  float currentSpeed;
   private ConstantForce constantForce2;
   // Start is called once before the first execution of Update after the MonoBehaviour is created
   void Start()
@@ -40,9 +43,25 @@ public class player : MonoBehaviour
       // transform.Rotate(0, rotation*rotationspeed*Time.deltaTime, 0);
         mouvementx = (float) Math.Sin(Math.PI/180*transform.rotation.eulerAngles.y);
         mouvementz = (float) Math.Cos(Math.PI/180*transform.rotation.eulerAngles.y);
-     rb.AddRelativeForce(new Vector3(0, 0,movespeed*Time.deltaTime),ForceMode.Force);
+    
+    // Apply boost when W key is held (only if unlocked)
+     currentSpeed = movespeed;
+    if (Input.GetKey(KeyCode.W) && boostMultiplier > 0)
+    {
+        currentSpeed *= boostMultiplier;
+    }
+    
+    // Drift when Left Shift is held (only if unlocked)
+    if (Input.GetKey(KeyCode.LeftShift) && driftEnabled)
+    {
+        // Reduce forward speed, increase rotation for drifting
+        currentSpeed *= 0.7f;
+        rb.AddTorque(0, rotation * rotationspeed * Time.deltaTime * 1.5f, 0);
+    }
+    
+    rb.AddRelativeForce(new Vector3(0, 0,currentSpeed*Time.deltaTime),ForceMode.Force);
   
-     trplayer.position = new Vector3(trplayer.position.x+(mouvementx*2.5f*Time.deltaTime), trplayer.position.y, trplayer.position.z+(mouvementz*2.5f*Time.deltaTime));
+     //trplayer.position = new Vector3(trplayer.position.x+(mouvementx*2.5f*Time.deltaTime), trplayer.position.y, trplayer.position.z+(mouvementz*2.5f*Time.deltaTime));
   //Debug.Log(constantForce2.relativeForce.z);
   }
   

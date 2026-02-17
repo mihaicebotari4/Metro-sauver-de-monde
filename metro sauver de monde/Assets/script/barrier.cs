@@ -15,14 +15,14 @@ public class shrink : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemey.transform.localScale != new Vector3(1,1,1))
+        if (enemey.transform.localScale != new Vector3(1,0.1f,1))
         {
             if (enemey.transform.localScale.x < 1)
             { 
                 enemey.transform.localScale = Vector3.MoveTowards(   enemey.transform.lossyScale ,john,Time.deltaTime*15);  
                           }
             else
-            {john = new Vector3(1,1,1);
+            {john = new Vector3(1,0.1f,1);
                  enemey.transform.localScale = Vector3.MoveTowards(   enemey.transform.lossyScale ,john,Time.deltaTime*15);  
             }
         }

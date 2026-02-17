@@ -15,6 +15,8 @@ public static int mobspawed;
 public static bool nextlevel;
 private int timerset =15;
 public static float lvltimer;
+private bool waitingForUpgrade = false;
+private bool firstLevelCompleted = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,12 +30,19 @@ public static float lvltimer;
         text.timeleft = (int)lvltimer;
         if (staticlogic.enemycount ==0)
         nextlevel=true;
-       if (nextlevel)
+       if (nextlevel && !waitingForUpgrade)
         {
-            Nextlevel(level,logic.mobspawed);
-            lvltimer = (int) (15f+(1+Math.Log10(level*35)));
-            nextlevel = false;
-            level++;
+            waitingForUpgrade = true;
+            // Only show upgrades after first level
+            if (firstLevelCompleted)
+            {
+                ShowUpgradeScreen();
+            }
+            else
+            {
+                firstLevelCompleted = true;
+                ContinueAfterUpgrade();
+            }
         }
         if (lvltimer<0)
         {
@@ -80,11 +89,41 @@ public static float lvltimer;
             }
            
     }
+    private void ShowUpgradeScreen()
+    {
+        if (UpgradeUI.instance != null)
+        {
+            UpgradeUI.instance.ShowUpgrades();
+        }
+        else
+        {
+            Debug.LogWarning("UpgradeUI not found! Continuing without upgrades.");
+            ContinueAfterUpgrade();
+        }
+    }
+    
+    public void ContinueAfterUpgrade()
+    {
+        Nextlevel(level, logic.mobspawed);
+        lvltimer = (int) (15f+(1+Math.Log10(level*35)));
+        nextlevel = false;
+        waitingForUpgrade = false;
+        level++;
+    }
+    
     public void death() 
     {
-        foreach(GameObject obj in SceneManager.GetActiveScene().GetRootGameObjects())
+        if (DeathScreenUI.instance != null)
         {
-            obj.SetActive(false);
+            DeathScreenUI.instance.ShowDeathScreen();
+        }
+        else
+        {
+            Debug.LogWarning("DeathScreenUI not found!");
+            foreach(GameObject obj in SceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                obj.SetActive(false);
+            }
         }
     }
 }

@@ -40,8 +40,6 @@ Material:
   m_ValidKeywords:
   - _BUILTIN_ALPHAPREMULTIPLY_ON
   - _BUILTIN_SURFACE_TYPE_TRANSPARENT
-  - _SPECULAR_SETUP
-  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
@@ -49,10 +47,9 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap:
     MotionVector: User
-    RenderType: Transparent
+    RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
-  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3

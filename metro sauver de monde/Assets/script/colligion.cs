@@ -36,6 +36,14 @@ public class colligion : MonoBehaviour
         { text.damage();
             return;
         }
+        
+        // Enemy killed by impact - add score only once
+        if (rb != null && used == 0)
+        {
+            float impactVelocity = rb.linearVelocity.magnitude;
+            ScoreManager.AddScore(impactVelocity, logic.level);
+        }
+        
         Vector3 dir = (transform.position-other.transform.position ).normalized;
         dir.y = 1f;
 
