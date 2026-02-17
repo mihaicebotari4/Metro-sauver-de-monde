@@ -1,7 +1,7 @@
 using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
-using UnityEditor.SearchService;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,40 +13,61 @@ public class logic : MonoBehaviour
 public static int level;
 public static int mobspawed;
 public static bool nextlevel;
+public static bool retryRequested;
 private int timerset =15;
 public static float lvltimer;
+public static bool isGameOver = false;
 private bool waitingForUpgrade = false;
-private bool firstLevelCompleted = false;
+private bool levelStarted = false;
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        // Reset static run state on scene load.
+        Time.timeScale = 1f;
+        level = 1;
+        mobspawed = 0;
+        nextlevel = false;
+        isGameOver = false;
+        staticlogic.enemycount = 0;
+        staticlogic.score = 0;
+        ScoreManager.ResetScore();
+        UpgradeManager.ResetRunState();
+        text.ResetRunState();
+        lvltimer = timerset;
+        waitingForUpgrade = false;
+        retryRequested = false;
+        levelStarted = false;
+    }
+
     void Start()
-    {lvltimer=timerset;
-        level=1;
-          }
+    {
+        // Start the first level immediately after scene load.
+        ContinueAfterUpgrade();
+    }
 
     // Update is called once per frame
     void Update()
     {
         text.timeleft = (int)lvltimer;
-        if (staticlogic.enemycount ==0)
-        nextlevel=true;
+        if (levelStarted && staticlogic.enemycount == 0)
+            nextlevel = true;
        if (nextlevel && !waitingForUpgrade)
         {
             waitingForUpgrade = true;
-            // Only show upgrades after first level
-            if (firstLevelCompleted)
+            // Show upgrades after level 2+, skip for level 1
+            if (level <= 2)
             {
-                ShowUpgradeScreen();
+                ContinueAfterUpgrade();
             }
             else
             {
-                firstLevelCompleted = true;
-                ContinueAfterUpgrade();
+                ShowUpgradeScreen();
             }
         }
-        if (lvltimer<0)
+        if (lvltimer < 0 && !isGameOver)
         {
             lvltimer = 0;
+            isGameOver = true;
             death();
         }
         lvltimer -= Time.deltaTime;
@@ -71,7 +92,10 @@ private bool firstLevelCompleted = false;
                 
                 while (spaceOccupied && attempts < maxAttempts)
                 {
-                    spawnPos = new Vector3(UnityEngine.Random.Range(-10, 10), 4f, UnityEngine.Random.Range(-15, 15));
+                    float spawnScale = (float)(Math.Log10(level + 1f) * 20f);
+                    float spawnRangeX = 10f + spawnScale;
+                    float spawnRangeZ = 15f + spawnScale;
+                    spawnPos = new Vector3(UnityEngine.Random.Range(-spawnRangeX, spawnRangeX), 4f, UnityEngine.Random.Range(-spawnRangeZ, spawnRangeZ));
                     
                   
                     Collider[] colliders = Physics.OverlapSphere(spawnPos, 1f);
@@ -108,6 +132,7 @@ private bool firstLevelCompleted = false;
         lvltimer = (int) (15f+(1+Math.Log10(level*35)));
         nextlevel = false;
         waitingForUpgrade = false;
+        levelStarted = true;
         level++;
     }
     

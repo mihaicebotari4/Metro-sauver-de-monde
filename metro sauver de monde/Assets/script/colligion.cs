@@ -37,11 +37,12 @@ public class colligion : MonoBehaviour
             return;
         }
         
-        // Enemy killed by impact - add score only once
-        if (rb != null && used == 0)
+        // Enemy killed by impact - add score only once and only if game is not over
+        if (rb != null && used == 0 && !logic.isGameOver)
         {
             float impactVelocity = rb.linearVelocity.magnitude;
             ScoreManager.AddScore(impactVelocity, logic.level);
+            logic.lvltimer += 1f; // Add 1 second to timer
         }
         
         Vector3 dir = (transform.position-other.transform.position ).normalized;

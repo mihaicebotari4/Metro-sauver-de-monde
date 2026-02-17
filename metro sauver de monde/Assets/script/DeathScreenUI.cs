@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using System;
 
 public class DeathScreenUI : MonoBehaviour
 {
@@ -70,9 +72,8 @@ public class DeathScreenUI : MonoBehaviour
     public void Retry()
     {
         Time.timeScale = 1f; // Resume time
-        if (deathPanel != null)
-            deathPanel.SetActive(false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        logic.retryRequested = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }
     
     public void ResetScores()

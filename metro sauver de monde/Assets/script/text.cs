@@ -29,6 +29,16 @@ public class text : MonoBehaviour
         enemeysleft = staticlogic.enemycount;
         myText.text = "Health: " + helth + "\nScore: " + score + "\nTime Left: " + timeleft + "\nEnemies: " + enemeysleft + "\nDifficulty: " + difficulty;
     }
+
+    public static void ResetRunState()
+    {
+        helth = 3;
+        score = 0;
+        timeleft = 0f;
+        enemeysleft = 0;
+        difficulty = 0f;
+        timesincelastdmg = 0f;
+    }
     public static void damage()
     {if (timesincelastdmg <1.5f) return;
         helth--;

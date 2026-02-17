@@ -52,6 +52,7 @@ public class UpgradeManager : MonoBehaviour
     };
     
     public static bool boostUnlocked = false;
+    private List<Upgrade> appliedUpgrades = new List<Upgrade>();
     
     public Upgrade[] currentUpgrades = new Upgrade[3];
     
@@ -62,10 +63,54 @@ public class UpgradeManager : MonoBehaviour
         else
             Destroy(gameObject);
     }
+
+    public static void ResetRunState()
+    {
+        boostUnlocked = false;
+        
+        // Reset player upgrades
+        player playerScript = FindFirstObjectByType<player>();
+        if (playerScript != null)
+        {
+            playerScript.boostMultiplier = 0f;
+            playerScript.driftEnabled = false;
+            playerScript.movespeed = 7.5f; // Reset to default
+            playerScript.rotationspeed = 125f; // Reset to default
+        }
+        
+        if (instance != null)
+        {
+            instance.ResetUpgradePool();
+        }
+    }
+
+    private void ResetUpgradePool()
+    {
+        appliedUpgrades.Clear();
+        foreach (Upgrade upgrade in upgradePool)
+        {
+            if (upgrade.type == UpgradeType.IncreaseBoost)
+            {
+                upgrade.isLocked = true;
+                if (string.IsNullOrEmpty(upgrade.lockedReason))
+                    upgrade.lockedReason = "Unlock the Boost first!";
+            }
+        }
+
+        currentUpgrades = new Upgrade[3];
+    }
     
     public Upgrade[] GetRandomUpgrades()
     {
-        List<Upgrade> available = new List<Upgrade>(upgradePool);
+        List<Upgrade> available = new List<Upgrade>();
+        
+        // Only include upgrades not yet applied
+        foreach (Upgrade upgrade in upgradePool)
+        {
+            if (!appliedUpgrades.Contains(upgrade))
+                available.Add(upgrade);
+        }
+        
         List<Upgrade> validUpgrades = new List<Upgrade>();
         
         // Filter out locked upgrades
@@ -149,5 +194,8 @@ public class UpgradeManager : MonoBehaviour
                 Debug.Log($"Level time increased by {upgrade.value} seconds");
                 break;
         }
+        
+        // Mark upgrade as applied so it won't appear again
+        appliedUpgrades.Add(upgrade);
     }
 }

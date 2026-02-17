@@ -63,17 +63,21 @@ public class UpgradeUI : MonoBehaviour
             return;
         }
         
+        // Apply upgrade before hiding panel
         UpgradeManager.instance.ApplyUpgrade(UpgradeManager.instance.currentUpgrades[index]);
+        Debug.Log("Upgrade applied!");
         
         if (upgradePanel != null)
             upgradePanel.SetActive(false);
             
         Time.timeScale = 1f;
         
-        // Signal to logic that we can continue
+        // Reset flags and continue
         logic.nextlevel = false;
         logic logicScript = FindFirstObjectByType<logic>();
         if (logicScript != null)
+        {
             logicScript.ContinueAfterUpgrade();
+        }
     }
 }

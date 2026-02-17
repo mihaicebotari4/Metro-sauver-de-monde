@@ -58,6 +58,7 @@ Material:
     m_Floats:
     - _BUILTIN_DstBlend: 10
     - _BUILTIN_QueueControl: 1
+    - _QueueControl: 1
     m_Colors:
     - baseColorFactor: {r: 1, g: 1, b: 1, a: 0.18431373}
   m_BuildTextureStacks: []

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class player : MonoBehaviour
 {
-  public float movespeed;
+  public float movespeed = 7.5f;
   public float rotation;
-  public float rotationspeed;
+  public float rotationspeed = 125f;
   public float boostMultiplier = 0f;
   public bool driftEnabled = false;
   private float timer;
