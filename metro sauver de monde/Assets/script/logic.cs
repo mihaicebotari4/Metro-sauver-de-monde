@@ -14,7 +14,7 @@ public static int level;
 public static int mobspawed;
 public static bool nextlevel;
 public static bool retryRequested;
-private int timerset =15;
+private int timerset =14;
 public static float lvltimer;
 public static bool isGameOver = false;
 private bool waitingForUpgrade = false;
@@ -79,7 +79,7 @@ private bool levelStarted = false;
          
 
             
-           mobspawed = (int) (Math.Log10((level+1)*20)*3);
+           mobspawed = (int) (Math.Log10((level+1)*20)*4)-3;
            staticlogic.enemycount = mobspawed;
 
            for (int i=0;i<mobspawed;i++)
