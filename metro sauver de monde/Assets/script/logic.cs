@@ -14,7 +14,7 @@ public static int level;
 public static int mobspawed;
 public static bool nextlevel;
 public static bool retryRequested;
-private int timerset =14;
+private int timerset =15;
 public static float lvltimer;
 public static bool isGameOver = false;
 private bool waitingForUpgrade = false;
@@ -63,6 +63,10 @@ private bool levelStarted = false;
             {
                 ShowUpgradeScreen();
             }
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            lvltimer = 0;
         }
         if (lvltimer < 0 && !isGameOver)
         {

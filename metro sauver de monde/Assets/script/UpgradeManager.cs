@@ -110,11 +110,22 @@ public class UpgradeManager : MonoBehaviour
     {
         List<Upgrade> available = new List<Upgrade>();
         
-        // Only include upgrades not yet applied
+        // Only include upgrades not yet applied (one-time upgrades: UnlockBoost and Drift)
         foreach (Upgrade upgrade in upgradePool)
         {
-            if (!appliedUpgrades.Contains(upgrade))
+            bool isOneTimeUpgrade = (upgrade.type == UpgradeType.UnlockBoost || upgrade.type == UpgradeType.Drift);
+            
+            if (isOneTimeUpgrade)
+            {
+                // One-time upgrades can only be picked once
+                if (!appliedUpgrades.Contains(upgrade))
+                    available.Add(upgrade);
+            }
+            else
+            {
+                // All other upgrades can be picked repeatedly
                 available.Add(upgrade);
+            }
         }
         
         List<Upgrade> validUpgrades = new List<Upgrade>();
