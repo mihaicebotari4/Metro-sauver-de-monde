@@ -36,6 +36,18 @@ public class UpgradeUI : MonoBehaviour
         {
             int index = i; // Capture for lambda
             
+            // Check if upgrade is null
+            if (upgrades[i] == null)
+            {
+                if (upgradeNames[i] != null)
+                    upgradeNames[i].text = "No Upgrade";
+                if (upgradeDescriptions[i] != null)
+                    upgradeDescriptions[i].text = "No more upgrades available";
+                if (upgradeButtons[i] != null)
+                    upgradeButtons[i].interactable = false;
+                continue;
+            }
+            
             if (upgradeNames[i] != null)
                 upgradeNames[i].text = upgrades[i].name;
                 
@@ -44,6 +56,7 @@ public class UpgradeUI : MonoBehaviour
             
             if (upgradeButtons[i] != null)
             {
+                upgradeButtons[i].interactable = true;
                 upgradeButtons[i].onClick.RemoveAllListeners();
                 upgradeButtons[i].onClick.AddListener(() => SelectUpgrade(index));
             }
@@ -57,9 +70,28 @@ public class UpgradeUI : MonoBehaviour
     
     public void SelectUpgrade(int index)
     {
-        if (UpgradeManager.instance == null || UpgradeManager.instance.currentUpgrades[index] == null)
+        if (UpgradeManager.instance == null)
         {
-            Debug.LogError("Invalid upgrade selection!");
+            Debug.LogError("UpgradeManager not found!");
+            return;
+        }
+        
+        if (index < 0 || index >= UpgradeManager.instance.currentUpgrades.Length)
+        {
+            Debug.LogError("Invalid upgrade index!");
+            return;
+        }
+        
+        if (UpgradeManager.instance.currentUpgrades[index] == null)
+        {
+            Debug.LogWarning("Selected upgrade is null - continuing without upgrade");
+            if (upgradePanel != null)
+                upgradePanel.SetActive(false);
+            Time.timeScale = 1f;
+            logic.nextlevel = false;
+            logic logicScript = FindFirstObjectByType<logic>();
+            if (logicScript != null)
+                logicScript.ContinueAfterUpgrade();
             return;
         }
         
@@ -74,10 +106,10 @@ public class UpgradeUI : MonoBehaviour
         
         // Reset flags and continue
         logic.nextlevel = false;
-        logic logicScript = FindFirstObjectByType<logic>();
-        if (logicScript != null)
+        logic logicScript2 = FindFirstObjectByType<logic>();
+        if (logicScript2 != null)
         {
-            logicScript.ContinueAfterUpgrade();
+            logicScript2.ContinueAfterUpgrade();
         }
     }
 }

@@ -16,6 +16,11 @@ public class DeathScreenUI : MonoBehaviour
     public Button retryButton;
     public Button quitButton;
     public Button resetScoresButton;
+    public GameObject namePanel;
+    public TMP_Dropdown nameDropdown;
+    public Button confirmNameButton;
+    public List<string> nameOptions = new List<string> { "Rookie", "Atlas", "Comet", "Nova", "Echo", "Bolt", "Metro", "Pulse" };
+    public string defaultName = "Rookie";
     
     void Awake()
     {
@@ -26,6 +31,9 @@ public class DeathScreenUI : MonoBehaviour
             
         if (deathPanel != null)
             deathPanel.SetActive(false);
+
+        if (namePanel != null)
+            namePanel.SetActive(false);
     }
     
     void Start()
@@ -38,32 +46,65 @@ public class DeathScreenUI : MonoBehaviour
             
         if (resetScoresButton != null)
             resetScoresButton.onClick.AddListener(ResetScores);
+
+        if (confirmNameButton != null)
+            confirmNameButton.onClick.AddListener(ConfirmName);
+    }
+
+    void Update()
+    {
+        // Toggle retry button with O key
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            if (retryButton != null)
+                retryButton.gameObject.SetActive(!retryButton.gameObject.activeSelf);
+        }
+
+        // Toggle quit button with K key
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (quitButton != null)
+                quitButton.gameObject.SetActive(!quitButton.gameObject.activeSelf);
+        }
+
+        // Toggle reset scores button with L key
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (resetScoresButton != null)
+                resetScoresButton.gameObject.SetActive(!resetScoresButton.gameObject.activeSelf);
+        }
     }
     
     public void ShowDeathScreen()
     {
         Time.timeScale = 0f; // Pause game
-        
-        // Save score to leaderboard
-        ScoreManager.SaveScore();
+
+        bool needsName = ScoreManager.BeginSaveScore();
         
         // Display final score
         if (finalScoreText != null)
             finalScoreText.text = $"Final Score: {ScoreManager.currentScore}";
         
-        // Display leaderboard
-        if (leaderboardText != null)
+        if (needsName)
         {
-            string leaderboardDisplay = "LEADERBOARD\n\n";
-            List<int> board = ScoreManager.GetLeaderboard();
-            
-            for (int i = 0; i < board.Count && i < 10; i++)
+            if (nameDropdown != null)
+                PopulateNameOptions();
+
+            if (namePanel != null)
             {
-                leaderboardDisplay += $"{i + 1}. {board[i]}\n";
+                namePanel.SetActive(true);
             }
-            
-            leaderboardText.text = leaderboardDisplay;
+            else
+            {
+                ScoreManager.FinalizePendingScore(GetDefaultName());
+            }
         }
+        else
+        {
+            ScoreManager.ClearPendingScore();
+        }
+
+        UpdateLeaderboardText();
         
         if (deathPanel != null)
             deathPanel.SetActive(true);
@@ -72,6 +113,7 @@ public class DeathScreenUI : MonoBehaviour
     public void Retry()
     {
         Time.timeScale = 1f; // Resume time
+        ScoreManager.ClearPendingScore();
         logic.retryRequested = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }
@@ -98,5 +140,70 @@ public class DeathScreenUI : MonoBehaviour
         #else
             Application.Quit();
         #endif
+    }
+
+    public void ConfirmName()
+    {
+        ScoreManager.FinalizePendingScore(GetSelectedName());
+
+        if (namePanel != null)
+            namePanel.SetActive(false);
+
+        UpdateLeaderboardText();
+    }
+
+    private void PopulateNameOptions()
+    {
+        if (nameDropdown == null)
+            return;
+
+        List<string> options = new List<string>();
+        if (nameOptions != null && nameOptions.Count > 0)
+            options.AddRange(nameOptions);
+        else
+            options.Add(defaultName);
+
+        nameDropdown.ClearOptions();
+        nameDropdown.AddOptions(options);
+    }
+
+    private string GetSelectedName()
+    {
+        if (nameDropdown != null && nameDropdown.options.Count > 0)
+            return nameDropdown.options[nameDropdown.value].text;
+
+        return GetDefaultName();
+    }
+
+    private string GetDefaultName()
+    {
+        if (nameOptions != null && nameOptions.Count > 0)
+            return nameOptions[0];
+
+        return defaultName;
+    }
+
+    private void UpdateLeaderboardText()
+    {
+        if (leaderboardText == null)
+            return;
+
+        string leaderboardDisplay = "LEADERBOARD\n\n";
+        List<ScoreManager.ScoreEntry> board = ScoreManager.GetLeaderboard();
+
+        if (board.Count == 0)
+        {
+            leaderboardDisplay += "No scores yet";
+        }
+        else
+        {
+            for (int i = 0; i < board.Count && i < 10; i++)
+            {
+                string name = string.IsNullOrEmpty(board[i].name) ? "Player" : board[i].name;
+                leaderboardDisplay += $"{i + 1}. {name} - {board[i].score}\n";
+            }
+        }
+
+        leaderboardText.text = leaderboardDisplay;
     }
 }

@@ -107,7 +107,8 @@ private bool levelStarted = false;
               
                 if (!spaceOccupied)
                 {
-                    Instantiate(obstacle[0], spawnPos, new quaternion(0, 0, 0, 0));
+                    int randomIndex = UnityEngine.Random.Range(0, 2); // Random between 0 and 1
+                    Instantiate(obstacle[randomIndex], spawnPos, new quaternion(0, 0, 0, 0));
                 }
             
             }

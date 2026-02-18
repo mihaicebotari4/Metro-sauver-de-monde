@@ -27,7 +27,18 @@ public class text : MonoBehaviour
     {
         timesincelastdmg += Time.deltaTime;
         enemeysleft = staticlogic.enemycount;
-        myText.text = "Health: " + helth + "\nScore: " + score + "\nTime Left: " + timeleft + "\nEnemies: " + enemeysleft + "\nDifficulty: " + difficulty;
+        score = ScoreManager.currentScore;
+        myText.text = "Score: " + score + "\nTime Left: " + timeleft + "\nEnemies: " + enemeysleft;
+        
+        // Hide when death screen is active
+        if (DeathScreenUI.instance != null && DeathScreenUI.instance.deathPanel != null)
+        {
+            bool deathScreenActive = DeathScreenUI.instance.deathPanel.activeSelf;
+            if (myText.gameObject.activeSelf == deathScreenActive)
+            {
+                myText.gameObject.SetActive(!deathScreenActive);
+            }
+        }
     }
 
     public static void ResetRunState()
@@ -41,7 +52,7 @@ public class text : MonoBehaviour
     }
     public static void damage()
     {if (timesincelastdmg <1.5f) return;
-        helth--;
+      //  helth--;
         timesincelastdmg = 0f;
     }
 }

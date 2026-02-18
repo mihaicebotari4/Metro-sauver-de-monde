@@ -13,7 +13,7 @@ public class UpgradeManager : MonoBehaviour
         UnlockBoost,
         IncreaseBoost,
         Drift,
-        IncreaseLevelTime
+        IncreaseColliderSize
     }
     
     [System.Serializable]
@@ -47,8 +47,8 @@ public class UpgradeManager : MonoBehaviour
         new Upgrade(UpgradeType.IncreaseBoost, "Enhanced Boost", "Boost multiplier +0.5x", 0.5f, true, "Unlock the Boost first!"),
         new Upgrade(UpgradeType.IncreaseBoost, "Nitro Boost", "Boost multiplier +1.0x", 1f, true, "Unlock the Boost first!"),
         new Upgrade(UpgradeType.Drift, "Drift Control", "Enable drifting with Left Shift key", 1f),
-        new Upgrade(UpgradeType.IncreaseLevelTime, "Extra Time", "Increase level timer by 5 seconds", 5f),
-        new Upgrade(UpgradeType.IncreaseLevelTime, "Bonus Time", "Increase level timer by 10 seconds", 10f)
+        new Upgrade(UpgradeType.IncreaseColliderSize, "Bigger Hitbox", "Increase collision box size by 20%", 0.2f),
+        new Upgrade(UpgradeType.IncreaseColliderSize, "Massive Hitbox", "Increase collision box size by 35%", 0.35f)
     };
     
     public static bool boostUnlocked = false;
@@ -76,6 +76,12 @@ public class UpgradeManager : MonoBehaviour
             playerScript.driftEnabled = false;
             playerScript.movespeed = 7.5f; // Reset to default
             playerScript.rotationspeed = 125f; // Reset to default
+            
+            // Reset collider size to default
+            if (playerScript.playerCollider != null)
+            {
+                playerScript.playerCollider.size = new Vector3(1f, 1f, 1f); // Reset to default size
+            }
         }
         
         if (instance != null)
@@ -189,9 +195,16 @@ public class UpgradeManager : MonoBehaviour
                 }
                 break;
                 
-            case UpgradeType.IncreaseLevelTime:
-                logic.lvltimer += upgrade.value;
-                Debug.Log($"Level time increased by {upgrade.value} seconds");
+            case UpgradeType.IncreaseColliderSize:
+                if (playerScript.playerCollider != null)
+                {
+                    playerScript.playerCollider.size *= (1f + upgrade.value);
+                    Debug.Log($"Collider size increased to {playerScript.playerCollider.size}");
+                }
+                else
+                {
+                    Debug.LogWarning("No BoxCollider assigned to player!");
+                }
                 break;
         }
         

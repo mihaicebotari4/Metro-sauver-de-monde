@@ -4,10 +4,26 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager instance;
+
+    [System.Serializable]
+    public struct ScoreEntry
+    {
+        public int score;
+        public string name;
+
+        public ScoreEntry(int score, string name)
+        {
+            this.score = score;
+            this.name = name;
+        }
+    }
     
     public static int currentScore = 0;
-    public static List<int> leaderboard = new List<int>();
+    public static List<ScoreEntry> leaderboard = new List<ScoreEntry>();
     private static readonly int maxLeaderboardEntries = 10;
+    private static int pendingScore = 0;
+    private static int pendingInsertIndex = -1;
+    private static bool hasPendingScore = false;
     
     void Awake()
     {
@@ -46,14 +62,59 @@ public class ScoreManager : MonoBehaviour
     {
         if (currentScore <= 0) return;
         
-        leaderboard.Add(currentScore);
-        leaderboard.Sort((a, b) => b.CompareTo(a)); // Sort descending
-        
+        if (BeginSaveScore())
+        {
+            FinalizePendingScore("Rookie");
+        }
+    }
+
+    public static bool BeginSaveScore()
+    {
+        if (currentScore <= 0) return false;
+
+        int insertIndex = GetInsertIndex(currentScore);
+        if (insertIndex < 0) return false;
+
+        pendingScore = currentScore;
+        pendingInsertIndex = insertIndex;
+        hasPendingScore = true;
+        return true;
+    }
+
+    public static void FinalizePendingScore(string name)
+    {
+        if (!hasPendingScore) return;
+
+        string finalName = string.IsNullOrEmpty(name) ? "Rookie" : name;
+        leaderboard.Insert(pendingInsertIndex, new ScoreEntry(pendingScore, finalName));
+
         if (leaderboard.Count > maxLeaderboardEntries)
             leaderboard.RemoveAt(leaderboard.Count - 1);
-        
+
         SaveLeaderboard();
-        Debug.Log($"Score saved: {currentScore}");
+        Debug.Log($"Score saved: {pendingScore} ({finalName})");
+        ClearPendingScore();
+    }
+
+    public static void ClearPendingScore()
+    {
+        pendingScore = 0;
+        pendingInsertIndex = -1;
+        hasPendingScore = false;
+    }
+
+    private static int GetInsertIndex(int score)
+    {
+        for (int i = 0; i < leaderboard.Count; i++)
+        {
+            if (score > leaderboard[i].score)
+                return i;
+        }
+
+        if (leaderboard.Count < maxLeaderboardEntries)
+            return leaderboard.Count;
+
+        return -1;
     }
     
     private static void LoadLeaderboard()
@@ -61,11 +122,13 @@ public class ScoreManager : MonoBehaviour
         leaderboard.Clear();
         for (int i = 0; i < maxLeaderboardEntries; i++)
         {
-            string key = "LeaderboardScore_" + i;
-            if (PlayerPrefs.HasKey(key))
+            string scoreKey = "LeaderboardScore_" + i;
+            if (PlayerPrefs.HasKey(scoreKey))
             {
-                int score = PlayerPrefs.GetInt(key);
-                leaderboard.Add(score);
+                int score = PlayerPrefs.GetInt(scoreKey);
+                string nameKey = "LeaderboardName_" + i;
+                string name = PlayerPrefs.HasKey(nameKey) ? PlayerPrefs.GetString(nameKey) : "Player";
+                leaderboard.Add(new ScoreEntry(score, name));
             }
         }
     }
@@ -74,15 +137,17 @@ public class ScoreManager : MonoBehaviour
     {
         for (int i = 0; i < leaderboard.Count && i < maxLeaderboardEntries; i++)
         {
-            string key = "LeaderboardScore_" + i;
-            PlayerPrefs.SetInt(key, leaderboard[i]);
+            string scoreKey = "LeaderboardScore_" + i;
+            string nameKey = "LeaderboardName_" + i;
+            PlayerPrefs.SetInt(scoreKey, leaderboard[i].score);
+            PlayerPrefs.SetString(nameKey, string.IsNullOrEmpty(leaderboard[i].name) ? "Player" : leaderboard[i].name);
         }
         PlayerPrefs.Save();
     }
     
-    public static List<int> GetLeaderboard()
+    public static List<ScoreEntry> GetLeaderboard()
     {
-        return new List<int>(leaderboard);
+        return new List<ScoreEntry>(leaderboard);
     }
     
     public static void ResetLeaderboard()
@@ -90,8 +155,10 @@ public class ScoreManager : MonoBehaviour
         leaderboard.Clear();
         for (int i = 0; i < maxLeaderboardEntries; i++)
         {
-            string key = "LeaderboardScore_" + i;
-            PlayerPrefs.DeleteKey(key);
+            string scoreKey = "LeaderboardScore_" + i;
+            string nameKey = "LeaderboardName_" + i;
+            PlayerPrefs.DeleteKey(scoreKey);
+            PlayerPrefs.DeleteKey(nameKey);
         }
         PlayerPrefs.Save();
         Debug.Log("Leaderboard reset!");

@@ -9,6 +9,7 @@ public class player : MonoBehaviour
   public float rotationspeed = 125f;
   public float boostMultiplier = 0f;
   public bool driftEnabled = false;
+  [SerializeField] public BoxCollider playerCollider;
   private float timer;
   [SerializeField] private Rigidbody rb;
 
@@ -22,6 +23,9 @@ public class player : MonoBehaviour
   { constantForce2 = GetComponent<ConstantForce>();
     trplayer = GetComponent<Transform>();
     rb = GetComponent<Rigidbody>();
+    
+    if (playerCollider == null)
+        playerCollider = GetComponent<BoxCollider>();
   }
 
   // Update is called once per frame

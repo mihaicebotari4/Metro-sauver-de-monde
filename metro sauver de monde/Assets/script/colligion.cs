@@ -48,8 +48,18 @@ public class colligion : MonoBehaviour
         Vector3 dir = (transform.position-other.transform.position ).normalized;
         dir.y = 1f;
 
-        rbo.AddForce(dir * 45f, ForceMode.Impulse);
-        used =1;
+        rbo.AddForce(dir * 15f, ForceMode.Impulse);        
+        // Add random axis rotation
+        Vector3 randomAxis = UnityEngine.Random.onUnitSphere;
+        rbo.AddTorque(randomAxis * 15f, ForceMode.Impulse);
+                used =1;
         staticlogic.enemycount --;
+        
+        // Shrink collider so it doesn't kill other enemies
+        Collider myCollider = GetComponent<Collider>();
+        if (myCollider != null)
+        {
+            myCollider.enabled = false;
+        }
     }
 }
