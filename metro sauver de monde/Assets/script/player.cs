@@ -20,7 +20,9 @@ public class player : MonoBehaviour
   private ConstantForce constantForce2;
   // Start is called once before the first execution of Update after the MonoBehaviour is created
   void Start()
-  { constantForce2 = GetComponent<ConstantForce>();
+  { 
+    Application.targetFrameRate = 180;
+    constantForce2 = GetComponent<ConstantForce>();
     trplayer = GetComponent<Transform>();
     rb = GetComponent<Rigidbody>();
     
